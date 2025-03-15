@@ -1,5 +1,5 @@
 import Database from "better-sqlite3";
-import TaskDatabase, { Task } from "../db";
+import TaskDatabase, { Task } from "../src/db";
 import moment from "moment";
 
 describe("TaskDatabase", () => {

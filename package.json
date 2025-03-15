@@ -5,7 +5,7 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "start": "npx tsx --env-file=.env bot.ts"
+    "start": "npx tsx --env-file=.env ./src/bot.ts"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +13,9 @@
   "description": "",
   "dependencies": {
     "better-sqlite3": "^11.8.1",
+    "i18next": "^24.2.3",
+    "i18next-fs-backend": "^2.6.0",
+    "i18next-http-middleware": "^3.7.1",
     "moment": "^2.30.1",
     "node-schedule": "^2.1.1",
     "node-telegram-bot-api": "^0.66.0"
