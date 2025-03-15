@@ -5,29 +5,31 @@ import { handleAdd } from "./commands/add";
 import { handleList } from "./commands/list";
 import { handleDelete } from "./commands/delete";
 import moment from "moment";
+import UserDatabase from "./bd/user";
 
 // Configuración del bot
 const BOT_TOKEN = process.env.TELEGRAM_API_KEY || "";
 const bot = new TelegramBot(BOT_TOKEN, { polling: true });
 
 // Inicializar base de datos
-const db = new TaskDatabase("tasks.db");
+const taskDb = new TaskDatabase("tasks.db");
+const userDb = new UserDatabase("user.db");
 
 // Configurar los comandos
-handleStart(bot);
-handleAdd(bot, db);
-handleList(bot, db);
-handleDelete(bot, db);
+handleStart(bot, userDb);
+handleAdd(bot, taskDb);
+handleList(bot, taskDb);
+handleDelete(bot, taskDb);
 
 // Revisión de tareas cada 30 segundos
 setInterval(() => {
-  const tasksToNotify = db.getExpiredTasks();
+  const tasksToNotify = taskDb.getExpiredTasks();
 
   tasksToNotify.forEach((task) => {
     bot.sendMessage(task.chatId, `🔔 Recordatorio: ${task.description}`);
 
     if (task.periodAmount === 0) {
-      db.deleteTask(task.chatId);
+      taskDb.deleteTask(task.chatId);
     } else {
       // Calcular próxima fecha
       const nextRun = moment(task.nextRun)
@@ -36,7 +38,7 @@ setInterval(() => {
           task.periodicity as moment.unitOfTime.DurationConstructor
         )
         .toISOString();
-      db.updateNextRun(task.id!, nextRun);
+      taskDb.updateNextRun(task.id!, nextRun);
     }
   });
 }, 30000);
