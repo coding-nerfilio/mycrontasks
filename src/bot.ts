@@ -8,6 +8,7 @@ import moment from "moment";
 import UserDatabase from "./bd/user";
 import { tz } from "moment-timezone";
 import { getTimezoneFromGMT } from "./utills";
+import { handleConfiguration } from "./commands/settings";
 
 // Configuración del bot
 const BOT_TOKEN = process.env.TELEGRAM_API_KEY || "";
@@ -22,6 +23,7 @@ handleStart(bot, userDb);
 handleAdd(bot, taskDb);
 handleList(bot, taskDb);
 handleDelete(bot, taskDb);
+handleConfiguration(bot, userDb);
 
 // Revisión de tareas cada 30 segundos
 setInterval(() => {
