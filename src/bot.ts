@@ -1,7 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
 import moment from "moment";
 import { setInterval } from "timers";
-import TaskDatabase from "./db";
+import TaskDatabase from "./bd/tasks";
 
 // Configuración del bot
 const BOT_TOKEN = process.env.TELEGRAM_API_KEY || "";
