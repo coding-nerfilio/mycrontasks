@@ -12,7 +12,7 @@ export const handleList = (bot: TelegramBot, db: TaskDatabase) => {
     const taskList = tasks
       .map(
         (t) =>
-          `🆔 ${t.id} - ${t.description}\n⏳ Periodicidad: ${t.periodAmount} ${
+          `🎯 ${t.description}\n⏳ Periodicidad: ${t.periodAmount} ${
             t.periodicity
           }\n📅 Próximo aviso: ${moment(t.nextRun).format("YYYY-MM-DD HH:mm")}`
       )
