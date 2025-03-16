@@ -1,5 +1,6 @@
 import TelegramBot from "node-telegram-bot-api";
 import UserDatabase from "../bd/user";
+import i18next from "../locales/i18n";
 
 export const handleConfiguration = (bot: TelegramBot, db: UserDatabase) => {
   bot.onText(/\/settings/, (msg) => {
@@ -18,13 +19,17 @@ export const handleConfiguration = (bot: TelegramBot, db: UserDatabase) => {
           inline_keyboard: [
             [
               {
-                text: `Idioma: ${language === "es" ? "Español ✅" : "Español"}`,
+                text: `${i18next.t("language", { lng: language })}: ${
+                  language === "es" ? "Español ✅" : "Español"
+                }`,
                 callback_data: "language_es",
               },
             ],
             [
               {
-                text: `Idioma: ${language === "en" ? "English ✅" : "English"}`,
+                text: `${i18next.t("language", { lng: language })}: ${
+                  language === "en" ? "English ✅" : "English"
+                }`,
                 callback_data: "language_en",
               },
             ],
@@ -166,16 +171,18 @@ export const handleConfiguration = (bot: TelegramBot, db: UserDatabase) => {
       // Enviar mensaje con las opciones de configuración
       bot.sendMessage(
         chatId,
-        `Configuración actual:\n\nIdioma: ${
-          language === "es" ? "Español" : "English"
-        }\nZona horaria: ${timezone}`,
+        i18next.t("current_settings", {
+          lng: language,
+          language: language === "es" ? "Español" : "English",
+          timezone,
+        }),
         languageOptions
       );
 
       // Luego, proporcionar opciones para cambiar idioma o zona horaria
       bot.sendMessage(
         chatId,
-        "¿Qué te gustaría cambiar? Elige una opción:",
+        i18next.t("choose_option", { lng: language }),
         timezoneOptions
       );
 
@@ -187,9 +194,10 @@ export const handleConfiguration = (bot: TelegramBot, db: UserDatabase) => {
           db.updateLanguage(chatId, selectedLanguage);
           bot.sendMessage(
             chatId,
-            `Idioma actualizado a: ${
-              selectedLanguage === "es" ? "Español" : "English"
-            }`
+            i18next.t("language_updated", {
+              lng: selectedLanguage,
+              language: selectedLanguage === "es" ? "Español" : "English",
+            })
           );
         }
 
@@ -200,16 +208,16 @@ export const handleConfiguration = (bot: TelegramBot, db: UserDatabase) => {
           db.updateTimezone(chatId, selectedTimezone);
           bot.sendMessage(
             chatId,
-            `Zona horaria actualizada a: ${selectedTimezone}`
+            i18next.t("timezone_updated", {
+              lng: selectedLanguage,
+              timezone: selectedTimezone,
+            })
           );
         }
       });
     } else {
       // Si el usuario no está registrado, le avisamos
-      bot.sendMessage(
-        chatId,
-        "No estás registrado. Usa el comando /start para registrarte."
-      );
+      bot.sendMessage(chatId, i18next.t("not_registered"));
     }
   });
 };

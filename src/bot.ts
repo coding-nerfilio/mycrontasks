@@ -20,9 +20,9 @@ const userDb = new UserDatabase("user.db");
 
 // Configurar los comandos
 handleStart(bot, userDb);
-handleAdd(bot, taskDb);
-handleList(bot, taskDb);
-handleDelete(bot, taskDb);
+handleAdd(bot, taskDb, userDb);
+handleList(bot, taskDb, userDb);
+handleDelete(bot, taskDb, userDb);
 handleConfiguration(bot, userDb);
 
 // Revisión de tareas cada 30 segundos
@@ -59,5 +59,9 @@ setInterval(() => {
     }
   });
 }, 30000);
+
+bot.on("polling_error", (error) => {
+  console.error("Polling Error:", error);
+});
 
 console.log("🤖 Bot iniciado...");

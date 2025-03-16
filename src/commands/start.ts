@@ -1,20 +1,18 @@
 import TelegramBot from "node-telegram-bot-api";
 import UserDatabase, { User } from "../bd/user"; // Asumiendo que tienes la base de datos del usuario ya implementada
+import i18next from "../locales/i18n";
 
 export const handleStart = (bot: TelegramBot, db: UserDatabase) => {
   bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
-
     // Verificar si el usuario ya está registrado
     const user = db.getUser(chatId);
 
     if (user) {
       // Si el usuario está registrado, enviar mensaje de bienvenida
-      bot.sendMessage(
-        chatId,
-        `Bienvenido de nuevo! 📌\n\nComandos disponibles:\n/start - Ver este mensaje\n/add - Agregar tarea\n/list - Listar tareas\n/delete - Eliminar tarea\n\nCrea tareas con recordatorios automáticos!`
-      );
+      bot.sendMessage(chatId, i18next.t("welcome", { lng: user!.language! }));
     } else {
+      const telegramLanguage = msg.from?.language_code || "en";
       // Si no está registrado, pedir idioma
       const languageOptions = {
         reply_markup: {
@@ -27,7 +25,7 @@ export const handleStart = (bot: TelegramBot, db: UserDatabase) => {
 
       bot.sendMessage(
         chatId,
-        "¡Bienvenido! Por favor, elige tu idioma:",
+        i18next.t("choose_language", { lng: telegramLanguage }),
         languageOptions
       );
 
@@ -90,7 +88,7 @@ export const handleStart = (bot: TelegramBot, db: UserDatabase) => {
 
           bot.sendMessage(
             chatId,
-            "Ahora, por favor, elige tu zona horaria:",
+            i18next.t("choose_timezone", { lng: selectedLanguage }),
             timezoneOptions
           );
 
@@ -111,7 +109,12 @@ export const handleStart = (bot: TelegramBot, db: UserDatabase) => {
 
               bot.sendMessage(
                 chatId,
-                `✅ Usuario registrado con éxito.\nIdioma: ${selectedLanguage}\nZona horaria: ${selectedTimezone}\n\nComandos disponibles:\n/start - Ver este mensaje\n/add - Agregar tarea\n/list - Listar tareas\n/delete - Eliminar tarea\n\nCrea tareas con recordatorios automáticos!`
+                i18next.t("user_registered", { lng: selectedLanguage })
+              );
+
+              bot.sendMessage(
+                chatId,
+                i18next.t("welcome", { lng: selectedLanguage })
               );
             }
           });
