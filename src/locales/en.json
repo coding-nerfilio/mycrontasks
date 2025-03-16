@@ -1,7 +1,7 @@
 {
-    "welcome":"Welcome to your task assistant! 📌\n\nAvailable commands:\n/start - View this message\n/add - Add task\n/list - List tasks\n/delete - Delete task\n\nCreate tasks with automatic reminders!",
+    "welcome":"Welcome to your task assistant! 📌\n\nAvailable commands:\n/start - View this message\n/add - Add task\n/list - List tasks\n/delete - Delete task\n/settings - Change bot settings\n\nCreate tasks with automatic reminders!",
     "add_task_description": "📌 Send me the task description:",
-    "add_task_datetime": "⏳ Send me the date and time of the first reminder (Format: YYYY-MM-DD HH:mm)",
+    "add_task_datetime": "⏳ Send me the date and time of the first reminder (Expected format: YYYY-MM-DD HH:mm -> 24hs)",
     "invalid_date": "❌ Invalid date. Use the correct format.",
     "add_task_periodicity": "🔁 Enter the periodicity (minute, hour, day, week, month):",
     "invalid_periodicity": "❌ Invalid periodicity.",

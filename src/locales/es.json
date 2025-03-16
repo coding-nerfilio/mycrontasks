@@ -1,7 +1,7 @@
 {
-    "welcome":"Bienvenido a tu asistente de tareas! 📌\n\nComandos disponibles:\n/start - Ver este mensaje\n/add - Agregar tarea\n/list - Listar tareas\n/delete - Eliminar tarea\n\nCrea tareas con recordatorios automáticos!",
+    "welcome":"Bienvenido a tu asistente de tareas! 📌\n\nComandos disponibles:\n/start - Ver este mensaje\n/add - Agregar tarea\n/list - Listar tareas\n/delete - Eliminar tarea\n/settings - Modifica ajustes del bot\n\nCrea tareas con recordatorios automáticos!",
     "add_task_description": "📌 Envíame la descripción de la tarea:",
-    "add_task_datetime": "⏳ Envíame la fecha y hora del primer aviso (Formato: YYYY-MM-DD HH:mm)",
+    "add_task_datetime": "⏳ Envíame la fecha y hora del primer aviso (Formato esperado: YYYY-MM-DD HH:mm -> 24hs)",
     "invalid_date": "❌ Fecha inválida. Usa el formato correcto.",
     "add_task_periodicity": "🔁 Ingresa la periodicidad (minute, hour, day, week, month):",
     "invalid_periodicity": "❌ Periodicidad inválida.",
