@@ -1,3 +1,5 @@
 .env
 node_modules/*
 tasks.db
+user.db
+package-lock.json
