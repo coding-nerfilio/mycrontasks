@@ -37,19 +37,20 @@ export const handleDelete = (
       keyboard
     );
   });
+};
 
-  // Manejar eliminaciones
-  bot.on("callback_query", (query) => {
-    const chatId = query.message!.chat.id;
-    const language = userDb.getUser(chatId)?.language;
-    const taskId = parseInt(query.data!.replace("delete_", ""));
-    db.deleteTask(taskId);
-    bot.answerCallbackQuery(query.id, {
-      text: i18next.t("delete_task_confirm", { lng: language }),
-    });
-    bot.sendMessage(
-      chatId,
-      i18next.t("delete_task_success", { lng: language })
-    );
+export const handleDeleteCallback = (
+  bot: TelegramBot,
+  query: TelegramBot.CallbackQuery,
+  userDb: UserDatabase,
+  taskDb: TaskDatabase
+) => {
+  const chatId = query.message!.chat.id;
+  const language = userDb.getUser(chatId)?.language;
+  const taskId = parseInt(query.data!.replace("delete_", ""));
+  taskDb.deleteTask(taskId);
+  bot.answerCallbackQuery(query.id, {
+    text: i18next.t("delete_task_confirm", { lng: language }),
   });
+  bot.sendMessage(chatId, i18next.t("delete_task_success", { lng: language }));
 };

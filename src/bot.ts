@@ -1,14 +1,22 @@
 import TelegramBot from "node-telegram-bot-api";
 import TaskDatabase from "./bd/tasks";
-import { handleStart } from "./commands/start";
+import {
+  handleStart,
+  handleStartLanguageCallback,
+  handleStartTimezoneCallback,
+} from "./commands/start";
 import { handleAdd } from "./commands/add";
 import { handleList } from "./commands/list";
-import { handleDelete } from "./commands/delete";
+import { handleDelete, handleDeleteCallback } from "./commands/delete";
 import moment from "moment";
 import UserDatabase from "./bd/user";
 import { tz } from "moment-timezone";
 import { getTimezoneFromGMT } from "./utills";
-import { handleConfiguration } from "./commands/settings";
+import {
+  handleChangelanguageCallback,
+  handleChangeTimezoneCallback,
+  handleConfiguration,
+} from "./commands/settings";
 
 // Configuración del bot
 const BOT_TOKEN = process.env.TELEGRAM_API_KEY || "";
@@ -24,6 +32,29 @@ handleAdd(bot, taskDb, userDb);
 handleList(bot, taskDb, userDb);
 handleDelete(bot, taskDb, userDb);
 handleConfiguration(bot, userDb);
+
+//register callbacks
+bot.on("callback_query", (query) => {
+  if (query.data?.includes("delete_")) {
+    return handleDeleteCallback(bot, query, userDb, taskDb);
+  }
+  if (query.data?.includes("language_")) {
+    return handleChangelanguageCallback(bot, query, userDb);
+  }
+  if (query.data?.includes("timezone_")) {
+    return handleChangeTimezoneCallback(bot, query, userDb);
+  }
+  if (query.data?.includes("startlang_")) {
+    return handleStartLanguageCallback(bot, query, userDb);
+  }
+  if (query.data?.includes("starttz_")) {
+    return handleStartTimezoneCallback(bot, query, userDb);
+  }
+});
+
+bot.on("polling_error", (error) => {
+  console.error("Polling Error:", error);
+});
 
 // Revisión de tareas cada 30 segundos
 setInterval(() => {
@@ -59,9 +90,5 @@ setInterval(() => {
     }
   });
 }, 30000);
-
-bot.on("polling_error", (error) => {
-  console.error("Polling Error:", error);
-});
 
 console.log("🤖 Bot iniciado...");

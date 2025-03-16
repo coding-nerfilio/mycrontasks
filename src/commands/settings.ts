@@ -185,39 +185,50 @@ export const handleConfiguration = (bot: TelegramBot, db: UserDatabase) => {
         i18next.t("choose_option", { lng: language }),
         timezoneOptions
       );
-
-      // Manejar selección de idioma
-      bot.on("callback_query", (query) => {
-        const selectedLanguage = query.data?.split("_")[1];
-
-        if (selectedLanguage) {
-          db.updateLanguage(chatId, selectedLanguage);
-          bot.sendMessage(
-            chatId,
-            i18next.t("language_updated", {
-              lng: selectedLanguage,
-              language: selectedLanguage === "es" ? "Español" : "English",
-            })
-          );
-        }
-
-        // Manejar selección de zona horaria
-        const selectedTimezone = query.data?.split("_")[1];
-
-        if (selectedTimezone) {
-          db.updateTimezone(chatId, selectedTimezone);
-          bot.sendMessage(
-            chatId,
-            i18next.t("timezone_updated", {
-              lng: selectedLanguage,
-              timezone: selectedTimezone,
-            })
-          );
-        }
-      });
     } else {
       // Si el usuario no está registrado, le avisamos
       bot.sendMessage(chatId, i18next.t("not_registered"));
     }
   });
+};
+
+export const handleChangeTimezoneCallback = (
+  bot: TelegramBot,
+  query: TelegramBot.CallbackQuery,
+  userDb: UserDatabase
+) => {
+  const selectedTimezone = query.data?.split("_")[1];
+  const chatId = query.message!.chat.id;
+
+  if (selectedTimezone) {
+    userDb.updateTimezone(chatId, selectedTimezone);
+    bot.sendMessage(
+      chatId,
+      i18next.t("timezone_updated", {
+        lng:
+          userDb.getUser(chatId)?.language || query.from.language_code || "en",
+        timezone: selectedTimezone,
+      })
+    );
+  }
+};
+
+export const handleChangelanguageCallback = (
+  bot: TelegramBot,
+  query: TelegramBot.CallbackQuery,
+  userDb: UserDatabase
+) => {
+  const selectedLanguage = query.data?.split("_")[1];
+  const chatId = query.message!.chat.id;
+
+  if (selectedLanguage) {
+    userDb.updateLanguage(chatId, selectedLanguage);
+    bot.sendMessage(
+      chatId,
+      i18next.t("language_updated", {
+        lng: selectedLanguage,
+        language: selectedLanguage === "es" ? "Español" : "English",
+      })
+    );
+  }
 };
