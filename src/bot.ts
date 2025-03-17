@@ -16,6 +16,7 @@ import {
   handleChangelanguageCallback,
   handleChangeTimezoneCallback,
   handleConfiguration,
+  handleSettingsMenuCallback,
 } from "./commands/settings";
 
 // Configuración del bot
@@ -49,6 +50,9 @@ bot.on("callback_query", (query) => {
   }
   if (query.data?.includes("starttz_")) {
     return handleStartTimezoneCallback(bot, query, userDb);
+  }
+  if (query.data?.includes("settingmenu_")) {
+    return handleSettingsMenuCallback(bot, query, userDb);
   }
 });
 
