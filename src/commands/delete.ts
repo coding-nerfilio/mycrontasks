@@ -2,6 +2,7 @@ import TelegramBot from "node-telegram-bot-api";
 import TaskDatabase from "../bd/tasks";
 import UserDatabase from "../bd/user";
 import i18next from "../locales/i18n";
+import { userIsRegistered } from "../utills";
 
 export const handleDelete = (
   bot: TelegramBot,
@@ -12,11 +13,10 @@ export const handleDelete = (
     const chatId = msg.chat.id;
     const tasks = db.getTasks(chatId);
 
-    const language = userDb.getUser(chatId)?.language;
+    const user = userIsRegistered(bot, userDb, chatId);
+    if (!user) return;
 
-    if (!language) {
-      return bot.sendDice(chatId);
-    }
+    const { language } = user;
 
     if (tasks.length === 0)
       return bot.sendMessage(

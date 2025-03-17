@@ -40,7 +40,6 @@ export const handleStartTimezoneCallback = (
   const selectedTimezone = query.data?.split("_")[1];
   const chatId = query.message!.chat.id;
   const language = userDb.getUser(chatId)?.language;
-  expect(language).toBeDefined();
 
   if (selectedTimezone) {
     userDb.updateTimezone(chatId, selectedTimezone);
@@ -53,6 +52,14 @@ export const handleStartTimezoneCallback = (
     };
     userDb.saveUser(newUser);
 
+    bot.deleteMessage(chatId, query.message!.message_id);
+    bot.sendMessage(
+      query.id,
+      i18next.t("timezone_updated", {
+        lng: language,
+        timezone: selectedTimezone,
+      })
+    );
     bot.sendMessage(chatId, i18next.t("user_registered", { lng: language }));
 
     bot.sendMessage(chatId, i18next.t("welcome", { lng: language }));
@@ -119,7 +126,14 @@ export const handleStartLanguageCallback = (
         ],
       },
     };
-
+    bot.deleteMessage(chatId, query.message!.message_id);
+    bot.sendMessage(
+      chatId,
+      i18next.t("language_updated", {
+        lng: selectedLanguage,
+        language: selectedLanguage === "es" ? "Español" : "English",
+      })
+    );
     bot.sendMessage(
       chatId,
       i18next.t("choose_timezone", { lng: selectedLanguage }),

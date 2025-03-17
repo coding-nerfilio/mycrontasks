@@ -1,3 +1,6 @@
+import TelegramBot from "node-telegram-bot-api";
+import UserDatabase, { User } from "./bd/user";
+import i18next from "./locales/i18n";
 const timezoneMapping: { [key: string]: string } = {
   "GMT+0": "UTC",
   "GMT+1": "Europe/Paris",
@@ -27,4 +30,16 @@ const timezoneMapping: { [key: string]: string } = {
 };
 export function getTimezoneFromGMT(gmt: string): string {
   return timezoneMapping[gmt] || "UTC"; // Devuelve UTC si no se encuentra la zona horaria
+}
+export function userIsRegistered(
+  bot: TelegramBot,
+  userDb: UserDatabase,
+  chatId: number
+): User | null {
+  const user = userDb.getUser(chatId);
+  if (!user) {
+    bot.sendMessage(chatId, i18next.t("not_registered"));
+    return null;
+  }
+  return user;
 }

@@ -3,6 +3,7 @@ import TaskDatabase from "../bd/tasks";
 import moment from "moment";
 import i18next from "../locales/i18n"; // Asegúrate de importar correctamente i18next
 import UserDatabase from "../bd/user";
+import { userIsRegistered } from "../utills";
 
 export const handleList = (
   bot: TelegramBot,
@@ -12,11 +13,11 @@ export const handleList = (
   bot.onText(/\/list/, (msg) => {
     const chatId = msg.chat.id;
     const tasks = db.getTasks(chatId);
-    const language = userDb.getUser(chatId)?.language;
+    const user = userIsRegistered(bot, userDb, chatId);
+    if (!user) return;
 
-    if (!language) {
-      return bot.sendDice(chatId);
-    }
+    const { language } = user;
+
     if (tasks.length === 0)
       return bot.sendMessage(
         chatId,
